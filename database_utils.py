@@ -1,38 +1,53 @@
+import yaml
+from sqlalchemy import create_engine
+from sqlalchemy import inspect
+
+
 class DatabaseConnector:
       '''
       This class will be used to connect to databases. 
 
       Attributes:
+      db_creds - credentials for connecting to AWS RDS database. 
       '''
-      # you will use to connect with and upload data to the database
-      def __init__(self, db_creds):
 
-            # attributes
-            self.db_creds = db_creds
-
-      # methods for connecting to AWS RDS database
-      # TODO - read in the db_creds.yaml file
       def read_db_creds(self):
             '''
             Read in the AWS RDS database credentials file. 
             '''
-            import yaml
             with open('db_creds.yaml', 'r') as f:
-                  self.db_creds = yaml.safe_load(f)
+                  db_creds = yaml.safe_load(f)
+            return db_creds
           
       def init_db_engine(self):
             '''
-            Read the credentials and initialise to return an sqlalchemy database engine
+            Read the credentials from yaml file and adding drivername for sqlalchemy engine connector,
+            and initialise to return an sqlalchemy database engine.
             '''
-            from sqlalchemy import create_engine
-            engine = create_engine(connect_args= db_creds)
-            engine.execution_options(isolation_level='AUTOCOMMIT').connect()
+            creds = self.read_db_creds()
+            db_url = f"postgresql://{creds['RDS_USER']}:{creds['RDS_PASSWORD']}@{creds['RDS_HOST']}:{creds['RDS_PORT']}/{creds['RDS_DATABASE']}"
+            engine = create_engine(db_url)
+            engine.connect()
+            return engine
       
       def list_db_tables(self):
             '''
-            To list all tables in database
+            To list all tables in AWS RDS database
             '''
-            from sqlalchemy import inspect
-            inspector = inspect(engine)
-            inspector.get_table_names()
-      
+            inspector = inspect(self.init_db_engine())
+            print(inspector.get_table_names())
+
+      def upload_to_db(self):
+            '''
+            Take user_df and table name to upload as an argument. 
+            '''
+            self.user_df.to_sql('dim_users', self.engine, if_exists='replace')
+
+#Note - this is how the instances will be called.
+#Call instances when script is being run automatically,
+#and not interactively. 
+
+#connector = DatabaseConnector()
+#creds = connector.read_db_creds()
+#engine = connector.init_db_engine()
+#db_list = connector.list_db_tables()

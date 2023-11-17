@@ -37,17 +37,29 @@ class DatabaseConnector:
             inspector = inspect(self.init_db_engine())
             print(inspector.get_table_names())
 
-      def upload_to_db(self):
+      def upload_to_db(self, clean_df, table_name):
             '''
-            Take user_df and table name to upload as an argument. 
+            Uploads cleaned dataframes to sales_data database on local machine.
+            Cleaned df and given table name as an argument. 
             '''
-            self.user_df.to_sql('dim_users', self.engine, if_exists='replace')
+            DATABASE_TYPE = 'postgresql'
+            DBAPI = 'psycopg2'
+            HOST = 'localhost'
+            USER = 'postgres'
+            PASSWORD = 'lemonade1394'
+            DATABASE = 'sales_data'
+            PORT = 5432
+            
+            local_db_engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
+            local_db_engine.execution_options(isolation_level='AUTOCOMMIT').connect()
+
+            clean_df.to_sql(f"{table_name}", local_db_engine, if_exists='replace')
 
 #Note - this is how the instances will be called.
 #Call instances when script is being run automatically,
 #and not interactively. 
 
-#connector = DatabaseConnector()
+#connector = database_utils.DatabaseConnector()
 #creds = connector.read_db_creds()
 #engine = connector.init_db_engine()
 #db_list = connector.list_db_tables()

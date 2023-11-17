@@ -9,5 +9,8 @@
             "database": "sales_data",
             "username": "postgres"
         }
+    ],
+    "cSpell.words": [
+        "Centralisation"
     ]
 }

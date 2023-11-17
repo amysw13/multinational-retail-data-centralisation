@@ -52,8 +52,7 @@ class DatabaseConnector:
             
             local_db_engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
             local_db_engine.execution_options(isolation_level='AUTOCOMMIT').connect()
-
-            clean_df.to_sql(f"{table_name}", local_db_engine, if_exists='replace')
+            clean_df.to_sql(f'{table_name}', local_db_engine, if_exists='replace')
 
 #Note - this is how the instances will be called.
 #Call instances when script is being run automatically,

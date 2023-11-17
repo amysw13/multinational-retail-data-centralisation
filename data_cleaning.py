@@ -19,7 +19,11 @@ class DataCleaning:
         # formatting of addresses, and clean up all null values. 
 
         rds_df.date_of_birth = pd.to_datetime(rds_df.date_of_birth,  format= 'mixed', errors='coerce')
-        
+        rds_df.join_date = pd.to_datetime(rds_df.join_date,  format= 'mixed', errors='coerce')
+        rds_df['address'] = rds_df['address'].str.replace('\n', ' ')
+        rds_df = rds_df.dropna()   
+        return rds_df  
+
     def clean_card_data(self, card_df):
         '''
         Cleaning card details dataframe extracted from pdf
@@ -27,13 +31,15 @@ class DataCleaning:
         NULL values or errors with formatting
         '''
         #TODO - review cols for numeric and formatting clean up
-        card_df = 
+        card_df = pd.concat(card_df) #list of df to pd.df
+        
 
 
-    def called_clean_store_data(self, stores_df):
+
+    #def called_clean_store_data(self, stores_df):
         '''
         Clean up API retrieved data of store details.
         '''
         #TODO - review format of retrieved data
-        stores_df = 
+        #stores_df = 
 

@@ -31,12 +31,11 @@ class DataCleaning:
         clean the data to remove any erroneous values, 
         NULL values or errors with formatting
         '''
-        #TODO - review cols for numeric and formatting clean up
         card_df = pd.concat(card_df) #list of df to pd.df
         card_df = card_df.replace('NULL', np.NaN)
         card_df = card_df.replace('', np.NaN)
         card_df = card_df.dropna()
-        card_df['card_number'] = card_df['card_number'].replace(r'\D+', '', regex=True)
+        card_df['card_number'] = card_df['card_number'].replace(r'\D+', '', regex=True) #retaining only numeric
         card_df = card_df.replace('', np.NaN)
         card_df = card_df.dropna()
         card_df['card_number'] = card_df['card_number'].astype('int64')
@@ -49,12 +48,16 @@ class DataCleaning:
         '''
         Clean up API retrieved data of store details.
         '''
-        #TODO:
-        # - delete/drop lat column
-        # - continent - Spelling/formatting 'eeEurope'
-        # - opening_data - formatting to datetime
-        # - address - formatting
-        # - longitude - consistent formatting
-        # - remove rows of wrong/ NULL data /
+        #TODO:lat long need formatting?
+        stores_df = stores_df.drop('lat', axis=1) #remember to add axis = 1 for dropping column
+        stores_df['continent'] = stores_df['continent'].replace("eeEurope", "Europe")
+        stores_df['address'] = stores_df['address'].str.replace('\n', ' ')
+        stores_df['address'] = stores_df['address'].str.replace(',', ' ')
+        stores_df['staff_numbers'] = pd.to_numeric(stores_df['staff_numbers'], errors='coerce')
+        stores_df['longitude'] = pd.to_numeric(stores_df['longitude'], errors='coerce')
+        stores_df['latitude'] = pd.to_numeric(stores_df['latitude'], errors='coerce')
+        stores_df['opening_date'] = pd.to_datetime(stores_df['opening_date'],  format= 'mixed', errors='coerce')
         stores_df = stores_df.replace('NULL', np.NaN)
-
+        stores_df = stores_df.dropna()
+        stores_df['staff_numbers'] = stores_df['staff_numbers'].astype('int')
+        return stores_df

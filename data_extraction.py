@@ -1,6 +1,9 @@
 import pandas as pd
 import tabula
 import os
+import requests
+import json
+
 
 os.environ["JAVA_HOME"] = "C:/Program Files/Java/jdk-21"
 
@@ -13,8 +16,6 @@ class DataExtractor:
     Attributes:
     (Do I need to set certain permissions, private etc...?)
     '''
-    #self.header = {'x-api-key':'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
-
     def read_rds_table(self, table, engine):
         '''
         Using list_db_tables from DatabaseConnector Class - read in table of user data. 
@@ -27,12 +28,24 @@ class DataExtractor:
         card_details_df = tabula.read_pdf(pdf_path, pages= 'all')
         return card_details_df
     
-   # def list_number_of_stores(self, endpoint, header):
-        #TODO
-        #create an api to access num of stores
-        #stores endpoint, header dictionary as arguments
+    def list_number_of_stores(self, endpoint, header):
+        #endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
+        #header = {'x-api-key':'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+        response = requests.get(f"{endpoint}", headers=header)
+        Num_of_stores = response.json()
+        return Num_of_stores
+
+    def retrieve_stores_data(self, Num_of_stores, endpoint):
+        #Note - remove {store_number} for final endpoint url
+        #endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}'
+        header = {'x-api-key':'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+        number_of_stores = Num_of_stores
+        store_number = number_of_stores['number_stores']
+        store_data = []
+        for i in range(1, store_number):
+            response = requests.get(f"{endpoint}{i}", headers= header)
+            data = response.json()
+            store_data.append(data)
         
-    #def retrieve_stores_data(self, endpoint):
-        #TODO
-        #create api to access store details
-        #Save API results in a pandas DataFrame
+        store_data_df = pd.DataFrame(store_data)
+        return store_data_df

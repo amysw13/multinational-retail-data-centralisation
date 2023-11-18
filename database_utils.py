@@ -42,6 +42,7 @@ class DatabaseConnector:
             Uploads cleaned dataframes to sales_data database on local machine.
             Cleaned df and given table name as an argument. 
             '''
+            #TODO - may need to input database details into a different file to hide password!! 
             DATABASE_TYPE = 'postgresql'
             DBAPI = 'psycopg2'
             HOST = 'localhost'

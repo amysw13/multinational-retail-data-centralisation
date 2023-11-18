@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class DataCleaning:
 
@@ -32,14 +33,28 @@ class DataCleaning:
         '''
         #TODO - review cols for numeric and formatting clean up
         card_df = pd.concat(card_df) #list of df to pd.df
-        
+        card_df = card_df.replace('NULL', np.NaN)
+        card_df = card_df.replace('', np.NaN)
+        card_df = card_df.dropna()
+        card_df['card_number'] = card_df['card_number'].replace(r'\D+', '', regex=True)
+        card_df = card_df.replace('', np.NaN)
+        card_df = card_df.dropna()
+        card_df['card_number'] = card_df['card_number'].astype('int64')
+        card_df.date_payment_confirmed = pd.to_datetime(card_df.date_payment_confirmed, format="%Y-%m-%d", errors="coerce")
+        card_df = card_df.dropna()
+        card_df.expiry_date = pd.to_datetime(card_df.expiry_date, format="%m/%y").dt.strftime("%m/%y")
+        return card_df
 
-
-
-    #def called_clean_store_data(self, stores_df):
+    def called_clean_store_data(self, stores_df):
         '''
         Clean up API retrieved data of store details.
         '''
-        #TODO - review format of retrieved data
-        #stores_df = 
+        #TODO:
+        # - delete/drop lat column
+        # - continent - Spelling/formatting 'eeEurope'
+        # - opening_data - formatting to datetime
+        # - address - formatting
+        # - longitude - consistent formatting
+        # - remove rows of wrong/ NULL data /
+        stores_df = stores_df.replace('NULL', np.NaN)
 

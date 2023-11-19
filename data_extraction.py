@@ -54,8 +54,6 @@ class DataExtractor:
     
     def extract_from_s3(self, s3address):
         s3 = boto3.client('s3')
-        #TODO - breakdown and extract strings for address
-        #s3_address = 's3://data-handling-public/products.csv'
         s3_params = s3address.split('/')
         bucket = s3_params[2] 
         target_file = s3_params[3] 

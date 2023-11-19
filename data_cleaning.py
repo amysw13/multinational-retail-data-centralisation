@@ -12,12 +12,7 @@ class DataCleaning:
         You will need clean the user data, look out for NULL values, errors with dates, incorrectly typed values and 
         rows filled with the wrong information.
         '''
-        #No null data to begin with
-        #2. Address - need to remove and replace "\n" - formatting
-        #3. Check date formats - currently object (str/mixed data) -> change to datetime64
-        #4. remove all null values .dropna()
-        #TODO - run through the columns for data type conversion to dates, 
-        # formatting of addresses, and clean up all null values. 
+        #TODO - formatting of phone numbers still to work out. 
         rds_df.date_of_birth = pd.to_datetime(rds_df.date_of_birth,  format= 'mixed', errors='coerce')
         rds_df.join_date = pd.to_datetime(rds_df.join_date,  format= 'mixed', errors='coerce')
         rds_df['address'] = rds_df['address'].str.replace('\n', ' ')
@@ -47,7 +42,6 @@ class DataCleaning:
         '''
         Clean up API retrieved data of store details, and return clean pd.df.
         '''
-        #TODO:lat long need formatting?
         stores_df = stores_df.drop('lat', axis=1) #remember to add axis = 1 for dropping column
         stores_df['continent'] = stores_df['continent'].replace("eeEurope", "Europe")
         stores_df['address'] = stores_df['address'].str.replace('\n', ' ')
@@ -90,4 +84,8 @@ class DataCleaning:
         product_df.date_added = pd.to_datetime(product_df.date_added,  format= 'mixed', errors='coerce')
         product_df = product_df.dropna()
         return product_df
+    
+    def clean_orders_data(self, orders_df):
+        orders_df = orders_df.drop(['first_name', 'last_name','1' ,'level_0'], axis=1)
+        return orders_df
 

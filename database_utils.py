@@ -42,16 +42,9 @@ class DatabaseConnector:
             Uploads cleaned dataframes to sales_data database on local machine.
             Cleaned df and given table name as an argument. 
             '''
-            #TODO - may need to input database details into a different file to hide password!! 
-            DATABASE_TYPE = 'postgresql'
-            DBAPI = 'psycopg2'
-            HOST = 'localhost'
-            USER = 'postgres'
-            PASSWORD = 'lemonade1394'
-            DATABASE = 'sales_data'
-            PORT = 5432
-            
-            local_db_engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
+            with open('local_creds.yaml', 'r') as f:
+                  local_creds = yaml.safe_load(f)
+            local_db_engine = create_engine(f"{local_creds['DATABASE_TYPE']}+{local_creds['DBAPI']}://{local_creds['USER']}:{local_creds['PASSWORD']}@{local_creds['HOST']}:{local_creds['PORT']}/{local_creds['DATABASE']}")
             local_db_engine.execution_options(isolation_level='AUTOCOMMIT').connect()
             clean_df.to_sql(f'{table_name}', local_db_engine, if_exists='replace')
 

@@ -88,4 +88,11 @@ class DataCleaning:
     def clean_orders_data(self, orders_df):
         orders_df = orders_df.drop(['first_name', 'last_name','1' ,'level_0'], axis=1)
         return orders_df
+    
+    def clean_events_data(self, events_df):
+        sales_col = pd.to_datetime(events_df[['month', 'year', 'day']], errors= 'coerce')
+        events_df = events_df.drop(['month', 'year', 'day'], axis = 1)
+        events_df['sale_date'] = sales_col
+        events_df = events_df.dropna()
+        return events_df
 

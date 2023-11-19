@@ -4,6 +4,7 @@ import os
 import requests
 import json
 import boto3
+import re
 
 
 os.environ["JAVA_HOME"] = "C:/Program Files/Java/jdk-21"
@@ -54,10 +55,21 @@ class DataExtractor:
     
     def extract_from_s3(self, s3address):
         s3 = boto3.client('s3')
-        s3_params = s3address.split('/')
+        #s3address = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+        #s3address = 's3://data-handling-public/products.csv'
+        s3_params = re.split('[//.]', s3address)
+        #bucket name from url
         bucket = s3_params[2] 
-        target_file = s3_params[3] 
+        #file name by accessing last two elements of split string list
+        delimiter = '.'
+        target_file = delimiter.join(s3_params[-2:])
         file_download_path = 'C:/Users/amysw/Documents/AI_core/multinational-retail-data-centralisation/'
         s3.download_file(f'{bucket}',  f'{target_file}', f'{file_download_path}{target_file}')
-        product_df = pd.read_csv('products.csv')
-        return product_df
+        def read_in_file(target_file):
+            if '.csv' in target_file:
+                s3_df = pd.read_csv(f'{target_file}')
+            if '.json' in target_file:
+                s3_df = pd.read_json(f'{target_file}')
+            return s3_df
+        res_df = read_in_file(target_file)
+        return res_df

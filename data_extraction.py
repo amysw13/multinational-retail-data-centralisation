@@ -3,6 +3,7 @@ import tabula
 import os
 import requests
 import json
+import boto3
 
 
 os.environ["JAVA_HOME"] = "C:/Program Files/Java/jdk-21"
@@ -50,3 +51,15 @@ class DataExtractor:
         
         store_data_df = pd.DataFrame(store_data)
         return store_data_df
+    
+    def extract_from_s3(self, s3address):
+        s3 = boto3.client('s3')
+        #TODO - breakdown and extract strings for address
+        #s3_address = 's3://data-handling-public/products.csv'
+        s3_params = s3address.split('/')
+        bucket = s3_params[2] 
+        target_file = s3_params[3] 
+        file_download_path = 'C:/Users/amysw/Documents/AI_core/multinational-retail-data-centralisation/'
+        s3.download_file(f'{bucket}',  f'{target_file}', f'{file_download_path}{target_file}')
+        product_df = pd.read_csv('products.csv')
+        return product_df

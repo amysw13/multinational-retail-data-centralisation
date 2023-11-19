@@ -18,7 +18,6 @@ class DataCleaning:
         #4. remove all null values .dropna()
         #TODO - run through the columns for data type conversion to dates, 
         # formatting of addresses, and clean up all null values. 
-
         rds_df.date_of_birth = pd.to_datetime(rds_df.date_of_birth,  format= 'mixed', errors='coerce')
         rds_df.join_date = pd.to_datetime(rds_df.join_date,  format= 'mixed', errors='coerce')
         rds_df['address'] = rds_df['address'].str.replace('\n', ' ')
@@ -46,7 +45,7 @@ class DataCleaning:
 
     def called_clean_store_data(self, stores_df):
         '''
-        Clean up API retrieved data of store details.
+        Clean up API retrieved data of store details, and return clean pd.df.
         '''
         #TODO:lat long need formatting?
         stores_df = stores_df.drop('lat', axis=1) #remember to add axis = 1 for dropping column
@@ -61,3 +60,34 @@ class DataCleaning:
         stores_df = stores_df.dropna()
         stores_df['staff_numbers'] = stores_df['staff_numbers'].astype('int')
         return stores_df
+
+    def convert_product_weights(self, product_df):
+        '''
+        If you check the weight column in the DataFrame the weights all have different units.
+        Convert them all to a decimal value representing their weight in kg. Use a 1:1 ratio of ml to g as a rough estimate for the rows containing ml.
+        Develop the method to clean up the weight column and remove all excess characters then represent the weights as a float.
+        '''
+        product_df['weight'] = product_df['weight'].str.replace('ml', 'g')
+        product_df['weight'] = product_df['weight'].str.replace(' .', '')
+        product_df['weight'] = product_df['weight'].dropna()
+        #function to evaluate the cells with multiples of weight to total in kg
+        def convert_weight(weight):
+            if isinstance(weight, str):
+                if 'x' in weight:
+                    weight = weight.replace('x', '*')
+                if 'g' in weight and 'kg' not in weight:
+                    weight = eval(weight.replace('g', '')) / 1000  # converting g to kg
+                return weight
+        product_df['weight'] = product_df['weight'].apply(convert_weight)
+        #below, ensure due to mix data types in columns, that only str with kg are replaced, otherwise causes nan in non-str
+        product_df['weight'] = product_df['weight'].apply(lambda x: x.replace('kg', '') if isinstance(x, str) else x)
+        #finally causes na for unwanted values - will be cleaned up with the next method.
+        product_df['weight'] = pd.to_numeric(product_df['weight'], errors='coerce')
+        product_df['weight'] = product_df['weight'].round(2)
+        return product_df
+
+    def clean_products_data(self, product_df):
+        product_df.date_added = pd.to_datetime(product_df.date_added,  format= 'mixed', errors='coerce')
+        product_df = product_df.dropna()
+        return product_df
+

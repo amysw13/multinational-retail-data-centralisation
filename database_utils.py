@@ -1,4 +1,5 @@
 import yaml
+
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 from sqlalchemy.dialects.postgresql import insert

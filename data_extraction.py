@@ -1,11 +1,11 @@
-import pandas as pd
-import tabula
 import os
+
+import tabula
 import requests
-import json
 import boto3
 import re
 
+import pandas as pd
 
 os.environ["JAVA_HOME"] = "C:/Program Files/Java/jdk-21"
 
@@ -13,10 +13,8 @@ class DataExtractor:
     ''' 
     This class is for extracting data from different data sources
 
-    This class will include methods for extracting data from .csv, APIs and AWS RDS.
-    contain methods to help extract data from different data sources - CSV files - API - S3 bucket.
-    Attributes:
-    (Do I need to set certain permissions, private etc...?)
+    This class will include methods for extracting data from .pdf, .csv and .json files, APIs, s3 buckets and AWS RDS.
+    Returning the data as pandas data frames for cleaning and uploading to centralised data base. 
     '''
     def read_rds_table(self, table, engine):
         '''

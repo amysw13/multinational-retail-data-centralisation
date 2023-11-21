@@ -1,7 +1,18 @@
 import pandas as pd
 import numpy as np
+import re
 
 class DataCleaning:
+
+    def check_invalid_input(self, df):
+        pattern = re.compile(r"[A-Za-z]+")
+        for column in df:
+            df[column].astype(str).str.len() == 10 & pattern.match(df[column])
+
+        Index_labels = df[column].index.tolist()
+        print(len(Index_labels))
+        print(Index_labels)
+        df = df.drop(Index_labels, errors='ignore')
 
     def clean_user_data(self, rds_df):
         '''
@@ -12,11 +23,27 @@ class DataCleaning:
         You will need clean the user data, look out for NULL values, errors with dates, incorrectly typed values and 
         rows filled with the wrong information.
         '''
-        #TODO - formatting of phone numbers still to work out. 
+        rds_df['country_code'] = rds_df['country_code'].replace("GGB", "GB")
         rds_df.date_of_birth = pd.to_datetime(rds_df.date_of_birth,  format= 'mixed', errors='coerce')
         rds_df.join_date = pd.to_datetime(rds_df.join_date,  format= 'mixed', errors='coerce')
         rds_df['address'] = rds_df['address'].str.replace('\n', ' ')
-        rds_df = rds_df.dropna()   
+        rds_df = rds_df.dropna()
+        isd_code_map = { "GB": "+44", "DE": "+49", "US": "+1" }
+        def correct_phone_number(row):
+            import re
+            # Remove special chars other than digits, `+` and letters used for extension e.g. `x`, `ext` (following keeps all alphabets).
+            result = re.sub("[^A-Za-z\d\+]", "", row["phone_number"])
+            
+            # Prefix ISD code by matching country code.
+            if not result.startswith(isd_code_map[row["country_code"]]):
+                result = isd_code_map[row["country_code"]] + result
+
+            # Remove `0` that follows ISD code.
+            if result.startswith(isd_code_map[row["country_code"]] + "0"):
+                result = result.replace(isd_code_map[row["country_code"]] + "0", isd_code_map[row["country_code"]])
+            return result
+
+        rds_df["phone_number"] = rds_df.apply(correct_phone_number, axis=1)
         return rds_df  
 
     def clean_card_data(self, card_df):
@@ -25,17 +52,14 @@ class DataCleaning:
         clean the data to remove any erroneous values, 
         NULL values or errors with formatting
         '''
-        card_df = pd.concat(card_df) #list of df to pd.df
-        card_df = card_df.replace('NULL', np.NaN)
-        card_df = card_df.replace('', np.NaN)
-        card_df = card_df.dropna()
-        card_df['card_number'] = card_df['card_number'].replace(r'\D+', '', regex=True) #retaining only numeric
-        card_df = card_df.replace('', np.NaN)
-        card_df = card_df.dropna()
-        card_df['card_number'] = card_df['card_number'].astype('int64')
+        card_df = pd.concat(card_df) #join list of df into a pandas dataframe
+        Index_labels = card_df[card_df['expiry_date'].astype(str).str.len() > 5].index.tolist() #checking invalid values
+        card_df = card_df.drop(Index_labels, errors='ignore')
+        card_df['card_number'] = card_df['card_number'].replace(r'\D+', np.NaN, regex=True) #retaining only numeric
         card_df.date_payment_confirmed = pd.to_datetime(card_df.date_payment_confirmed, format="%Y-%m-%d", errors="coerce")
-        card_df = card_df.dropna()
-        card_df.expiry_date = pd.to_datetime(card_df.expiry_date, format="%m/%y").dt.strftime("%m/%y")
+        card_df.expiry_date = pd.to_datetime(card_df.expiry_date, format="%m/%y", errors="coerce").dt.strftime("%m/%y")
+        card_df = card_df.dropna(how='any')
+        card_df['card_number'] = card_df['card_number'].astype('int64')      
         return card_df
 
     def called_clean_store_data(self, stores_df):
@@ -90,9 +114,10 @@ class DataCleaning:
         return orders_df
     
     def clean_events_data(self, events_df):
-        sales_col = pd.to_datetime(events_df[['month', 'year', 'day']], errors= 'coerce')
-        events_df = events_df.drop(['month', 'year', 'day'], axis = 1)
-        events_df['sale_date'] = sales_col
-        events_df = events_df.dropna()
+        #to find wrongly entered information using col 'month' as indicator column
+        Index_labels = events_df[events_df['month'].astype(str).str.len() > 2].index.tolist()
+        print(len(Index_labels))
+        print(Index_labels)
+        events_df = events_df.drop(Index_labels, errors='ignore')
         return events_df
 

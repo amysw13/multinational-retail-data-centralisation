@@ -43,7 +43,7 @@ class DataExtractor:
         number_of_stores = Num_of_stores
         store_number = number_of_stores['number_stores']
         store_data = []
-        for i in range(1, store_number):
+        for i in range(0, store_number):
             response = requests.get(f"{endpoint}{i}", headers= header)
             data = response.json()
             store_data.append(data)

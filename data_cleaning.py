@@ -17,7 +17,7 @@ class DataCleaning:
         rds_df['country_code'] = rds_df['country_code'].replace("GGB", "GB")
         rds_df['date_of_birth'] = pd.to_datetime(rds_df['date_of_birth'] ,  format= 'mixed', errors='coerce')
         rds_df['join_date'] = pd.to_datetime(rds_df['join_date'],  format= 'mixed', errors='coerce')
-        rds_df['address'] = rds_df['address'].str.replace('\n', ' ')
+        rds_df['address'] = rds_df['address'].str.replace('\n | ', ' ')
         rds_df = rds_df.dropna()
         isd_code_map = { "GB": "+44", "DE": "+49", "US": "+1" }
         def correct_phone_number(row):
@@ -53,16 +53,16 @@ class DataCleaning:
         card_df['card_number'] = card_df['card_number'].astype('int64')
         return card_df
 
-    def called_clean_store_data(self, stores_df):
+    def clean_store_data(self, stores_df):
         '''
         Clean up API retrieved data of store details, and return clean pd.df.
         '''
         stores_df = stores_df[stores_df['country_code'].astype(str).str.len() == 2]
-        stores_df['staff_numbers'] = stores_df['staff_numbers'].replace(regex=[r'\D+'], value="")  #retaining only numeric
-        stores_df['staff_numbers'] = stores_df['staff_numbers'].astype('int')
-        stores_df['continent'] = stores_df['continent'].replace("eeEurope", "Europe")
+        stores_df['staff_numbers'] = stores_df['staff_numbers'].replace(regex=[r'\D+'], value="").astype('int')  #retaining only numeric
+        #stores_df['staff_numbers'] = stores_df['staff_numbers']
+        stores_df['continent'] = stores_df['continent'].replace({"eeEurope" : "Europe", "eeAmerica" : "America"})
         stores_df['opening_date'] = pd.to_datetime(stores_df['opening_date'],  format= 'mixed', errors='coerce')
-        stores_df['address'] = stores_df['address'].replace({'\n': ' ', ',': ' '}, regex= True)
+        stores_df['address'] = stores_df['address'].replace('\\n|,\s', ' ', regex = True)
         stores_df = stores_df.replace({'N/A': np.nan, None: np.nan})
         stores_df = stores_df.drop('lat', axis=1) #remember to add axis = 1 for dropping column
         return stores_df

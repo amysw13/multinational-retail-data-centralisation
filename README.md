@@ -60,3 +60,10 @@ cleaning = data_cleaning.DataCleaning()
 ## License information 🗒
 
 - [ ] get license info
+
+## Example Use / Demo
+
+Input here examples of extracting, cleaning and uploading data. 
+
+Use .pdf for workable online example. 
+

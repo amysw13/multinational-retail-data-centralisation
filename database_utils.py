@@ -48,17 +48,6 @@ class DatabaseConnector:
                   local_creds = yaml.safe_load(f)
             local_db_engine = create_engine(f"{local_creds['DATABASE_TYPE']}+{local_creds['DBAPI']}://{local_creds['USER']}:{local_creds['PASSWORD']}@{local_creds['HOST']}:{local_creds['PORT']}/{local_creds['DATABASE']}")
             local_db_engine.execution_options(isolation_level='AUTOCOMMIT').connect()
-            
-            #solution for ignoring conficts
-            #https://stackoverflow.com/questions/30337394/pandas-to-sql-fails-on-duplicate-primary-key
-            
-            # def insert_on_conflict_nothing(table, conn, keys, data_iter):
-            #       # "level_0" is the primary key in "conflict_table"
-            #       data = [dict(zip(keys, row)) for row in data_iter]
-            #       stmt = insert(table.table).values(data).on_conflict_do_nothing(index_elements=["level_0"])
-            #       result = conn.execute(stmt)
-            #       return result.rowcount
-
             clean_df.to_sql(f'{table_name}', local_db_engine, if_exists='replace')
 
 #Note - this is how the instances will be called.

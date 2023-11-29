@@ -1,8 +1,10 @@
+import os
+import re
+
+import pandas as pd
 import tabula
 import requests
 import boto3
-import re
-import pandas as pd
 
 class DataExtractor:
     ''' 
@@ -83,15 +85,15 @@ class DataExtractor:
         store_data_df = pd.DataFrame(store_data)
         return store_data_df
     
-    def extract_from_s3(self, s3address, file_download_path='C:/Users/amysw/Documents/AI_core/multinational-retail-data-centralisation/'):
+    def extract_from_s3(self, s3address, file_download_path = ""):
         '''
         Thus function is used for downloading data from AWS s3 bucket. 
         Using boto3 to connect to AWS s3 client, and downloading data from s3 address.
-        Add path of location to download data (default = my local machine folder). 
+        Add path of location to download data (default = current working directory). 
 
         Args:
             s3address (str): Url path string representation, s3 bucket and target file for downloading.
-            file_download_path (str): String reprentation of local path to download target file to.
+            file_download_path (str): String representation of local path to download target file to.
 
         Returns:
             df (pd.Dataframe): returns the read target file as a pandas data frame. 
@@ -105,8 +107,8 @@ class DataExtractor:
         #file name by accessing last two elements of split string list
         delimiter = '.'
         target_file = delimiter.join(s3_params[-2:])
-        file_download_path = 'C:/Users/amysw/Documents/AI_core/multinational-retail-data-centralisation/'
-        s3.download_file(f'{bucket}',  f'{target_file}', f'{file_download_path}{target_file}')
+        file_download_path = os.getcwd() + '\Data'
+        s3.download_file(f'{bucket}',  f'{target_file}', f'{file_download_path}\{target_file}')
         
         def read_in_file(target_file):
             '''
@@ -118,5 +120,5 @@ class DataExtractor:
                 s3_df = pd.read_json(f'{target_file}')
             return s3_df
         
-        res_df = read_in_file(target_file)
+        res_df = read_in_file(f'{file_download_path}\{target_file}')
         return res_df

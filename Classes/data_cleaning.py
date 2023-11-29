@@ -84,7 +84,8 @@ class DataCleaning:
         '''
         stores_df = stores_df[stores_df['country_code'].astype(str).str.len() == 2]
         stores_df['staff_numbers'] = stores_df['staff_numbers'].replace(regex=[r'\D+'], value="").astype('int')  #retaining only numeric
-        stores_df['continent'] = stores_df['continent'].replace({"eeEurope" : "Europe", "eeAmerica" : "America"})
+        stores_df['continent'] = stores_df['continent'].replace("eeEurope" , "Europe" )
+        stores_df['continent'] = stores_df['continent'].replace("eeAmerica" , "America")
         stores_df['opening_date'] = pd.to_datetime(stores_df['opening_date'],  format= 'mixed', errors='coerce')
         stores_df['address'] = stores_df['address'].replace('\\n|,\s', ' ', regex = True)
         stores_df = stores_df.replace({'N/A': np.nan, None: np.nan})
@@ -102,23 +103,22 @@ class DataCleaning:
             df (pd.Dataframe): data frame weight column converted into kg (float) to two decimal places.
 
         '''
-        product_df['weight'] = product_df['weight'].replace({'ml': 'g', ' .': '', '16oz': 0.45})
-        product_df['weight'] = product_df['weight'].dropna()
-
+        product_df['weight'] = product_df['weight'].replace(regex=[r'ml'], value='g')
+        product_df['weight'] = product_df['weight'].replace(regex=[r'\s\.'], value='')
+        product_df['weight'] = product_df['weight'].replace('16oz', 0.45)
         #function to evaluate the cells with multiples of weight to total in kg
-        def convert_weight(weight):
+        def convert_weight(row):
             '''
             This function takes values in 'weight' column and converts multiples of weights
             and evaluates to total product weight in kg.
             '''
-            if isinstance(weight, str):
-                if 'x' in weight:
-                    weight = weight.replace('x', '*')
-                if 'g' in weight and 'kg' not in weight:
-                    weight = eval(weight.replace('g', '')) / 1000  # converting g to kg
-                return weight
-            
-        product_df['weight'] = product_df['weight'].apply(convert_weight)
+            if isinstance(row['weight'], str):
+                if 'x' in row['weight']:
+                    row['weight'] = row['weight'].replace('x', '*')
+                if 'g' in row['weight'] and 'kg' not in row['weight']:
+                    row['weight'] = eval(row['weight'].replace('g', '')) / 1000  # converting g to kg
+            return row['weight']
+        product_df['weight'] = product_df.apply(convert_weight, axis =1)
         #below, ensure due to mix data types in columns, that only str with kg are replaced, otherwise causes nan in non-str
         product_df['weight'] = product_df['weight'].apply(lambda x: x.replace('kg', '') if isinstance(x, str) else x)
         #finally causes na for unwanted values - will be cleaned up with the next method.

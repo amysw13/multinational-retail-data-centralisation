@@ -1,11 +1,27 @@
 # Multinational Retail Data Centralisation 💼
 
+# Table of contents
+
+- [Multinational Retail Data Centralisation 💼](#multinational-retail-data-centralisation-)
+- [Table of contents](#table-of-contents)
+  - [Description](#description)
+  - [Aim](#aim)
+  - [Learnt Objectives](#learnt-objectives)
+- [Installation and Usage Instructions ⚙](#installation-and-usage-instructions-)
+  - [Example Use / Demo](#example-use--demo)
+    - [Result](#result)
+- [File Structure 📂](#file-structure-)
+- [License information 🗒](#license-information-)
+- [Open source packages used in this project](#open-source-packages-used-in-this-project)
+  - [Database connecting](#database-connecting)
+  - [Data extracting/downloading](#data-extractingdownloading)
+  - [Data cleaning](#data-cleaning)
 ---
-### Description
+## Description
 
 This project is for collating retail sales data for a multinational company, where data is spread across multiple data sources to one centralised database. Facilitating accessibility and analysing for company team members to become more data-driven.
 
-### Aim
+## Aim
 
 Using [![python](https://img.shields.io/badge/Python-3776AB.svg)](https://www.python.org/) class methods are utilised for **connecting** to data sources, data **extraction** and **cleaning** downloaded data.
 
@@ -13,7 +29,7 @@ Cleaned data will be uploaded to a centralised [![PostgreSQL](https://img.shield
 
 Querying the newly created centralised database to get up-to-date business metrics, using [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1.svg)](https://www.postgresql.org).
 
-### Learnt Objectives
+## Learnt Objectives
 
 - Advanced object orientated programming in Python.
 - Advanced development of Python class and methods.
@@ -32,44 +48,30 @@ Querying the newly created centralised database to get up-to-date business metri
 - Advanced project documentation and versioning with Github.
 - Applying Conda environments for project, and exportation to facilitate project collaboration.
 
-## Installation Instructions ⚙
+# Installation and Usage Instructions ⚙
 
 ---
-Download or Clone repository.
-
-Download class files
-
-- database_utils.py
-- data_extraction.py
-- data_cleaning.py
-
-(Note access keys and database connection files will need to be created for specified database connections.)
 
 **Import class modules:**
 
 ```py
-import database_utils
-import data_extraction
-import data_cleaning
+import Classes.database_utils as db_utils
+import Classes.data_extraction as data_ext
+import Classes.data_cleaning as data_clean
 ```
 
 **Create instances of each class:**
 
 ```py
-connector = database_utils.DatabaseConnector()
-extractor = data_extraction.DataExtractor()
-cleaning = data_cleaning.DataCleaning()
+connector = db_utils.DatabaseConnector()
+extractor = data_ext.DataExtractor()
+cleaning = data_clean.DataCleaning()
 
 ```
 
-- [ ] examples of each data source connection
-- [ ] cleaning example
-- [ ] uploading to local database example
-- [ ] include template for local credentials file to connect to local sql server
+**Usage**
 
-## Usage
-
-1. Data centralisation and cleaning
+1. Classes modules - database connection, data extraction and data cleaning.
 2. Database schema development
 3. Database querying
 
@@ -77,9 +79,11 @@ cleaning = data_cleaning.DataCleaning()
 
 ---
 
-<img height="50" width="50" src="https://cdn.simpleicons.org/python/"/>
+<img height="40" width="40" src="https://cdn.simpleicons.org/python/"/>
 
-Data base connecting:
+Connecting to AWS RDS database:
+
+See [credentials\_template.yaml](Credentials/credentials_template.yaml) for an example to create own credentials file.
 
 ```py
 # Reading in AWS RDS database credentials from .yaml file.
@@ -107,19 +111,25 @@ Data Cleaning:
 clean_rds_df = cleaning.clean_user_data(rds_df)
 ```
 
-Uploading clean dataframe to centralised database:
+Uploading dataframe to centralised database:
 
 ```py
 # Cleaned df object uploaded to centralised database, table named as 'dim_users'.
 connector.upload_to_db(clean_rds_df, 'dim_users')
 ```
+Detailed examples of class methods in [testing\_script.ipynb](testing_script.ipynb)
 
-<img height="50" width="50" src="https://cdn.simpleicons.org/postgresql/"/>
+---
 
-PostgreSQL database querying:
+<img height="40" width="40" src="https://cdn.simpleicons.org/postgresql/"/>
+
+Centralised database star-based schema development [database\_schema.ipynb](database_schema.ipynb)
+
+Applied PostgreSQL database querying [querying\_database.ipynb](querying_database.ipynb)
+
+Example:
 
 ```sql
-
 SELECT country_code,
     COUNT(country_code) AS total_no_stores
 FROM
@@ -132,7 +142,6 @@ ORDER BY
     total_no_stores DESC;
 
 ```
-
 ### Result
 
 |country_code  |total_no_stores
@@ -141,10 +150,9 @@ ORDER BY
 |DE            |141
 |US            |34
 
-## File Structure 📂
+# File Structure 📂
 
 ---
-
 - 📂 __multinational\-retail\-data\-centralisation__
    - 📂 __Classes__
      - 📄 [\_\_init\_\_.py](Classes/__init__.py)
@@ -158,59 +166,38 @@ ORDER BY
    - 📂 __Data__
      - 📄 [date\_details.json](Data/date_details.json)
      - 📄 [products.csv](Data/products.csv)
+   - 📄 [LICENSE](LICENSE)
    - 📄 [README.md](README.md)
    - 📄 [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml)
    - 📄 [database\_schema.ipynb](database_schema.ipynb)
    - 📄 [querying\_database.ipynb](querying_database.ipynb)
    - 📄 [testing\_script.ipynb](testing_script.ipynb)
-
-## License information 🗒
+  
+# License information 🗒
 
 ---
 
-- [ ] get license info
+[MIT](LICENSE)
 
-## Open source packages used in this project
+# Open source packages used in this project
 
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626.svg?&style=for-the-badge&logo=Jupyter&logoColor=white)
 ![VsCode](https://img.shields.io/badge/VSCode-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
 ![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 ![conda](https://img.shields.io/badge/conda-342B029.svg?&style=for-the-badge&logo=anaconda&logoColor=white)
 
-#### Database connecting
+## Database connecting
 
 ![sqlAlchemy](https://img.shields.io/badge/sqlAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)
 ![boto3](https://img.shields.io/badge/boto3-3775A9?style=for-the-badge&logo=amazonaws&logoColor=white)
 
-#### Data extracting/downloading
+## Data extracting/downloading
 
 ![requests](https://img.shields.io/badge/requests-3775A9?style=for-the-badge&logo=pypi&logoColor=white)
 ![PyYAML](https://img.shields.io/badge/PyYAML-CB171E?style=for-the-badge&logo=yaml&logoColor=white)
 ![tabula](https://img.shields.io/badge/tabula-3775A9?style=for-the-badge&logo=pypi&logoColor=white)
 
-#### Data cleaning
+## Data cleaning
 
 ![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
 ![Numpy]( https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)
-
-# Tasks
-
-- [x] Project Title
-- [x] Table of Contents, if the README file is long
-- [x] A description of the project: what it does, the aim of the project, and what you learned
-- [ ] Installation instructions
-
-- [x] File structure of the project
-- [ ] License information
-
----
-
-- [x] Clean up class methods files
-- [ ] Access modifiers
-- [ ] Testing_script
-- [ ] Database schema file
-- [ ] Database query file
-- [x] Read me file
-- [ ] Set up and installation
-- [x] Examples
-- [x] Docstrings for class and methods

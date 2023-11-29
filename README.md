@@ -71,6 +71,8 @@ cleaning = data_clean.DataCleaning()
 
 **Usage**
 
+Usage order to complete project from scratch. Additionally, can use [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml) to import project conda environment.
+
 1. Classes modules - database connection, data extraction and data cleaning.
 2. Database schema development
 3. Database querying

@@ -157,6 +157,8 @@ connector.upload_to_db(clean_rds_df, 'dim_users')
 
 Centralised database star-based schema development [database\_schema.ipynb](database_schema.ipynb)
 
+![Sales_data_ERD](Sales_data_ERD.png)
+
 ### 3. Database querying
 Applied PostgreSQL database querying [querying\_database.ipynb](querying_database.ipynb)
 

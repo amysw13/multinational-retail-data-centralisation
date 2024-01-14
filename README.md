@@ -83,7 +83,7 @@ Alternatively, use [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml) to import project co
 
 ## Installation Instructions
 
-1. `git clone https://github.com/vpagador/powerbi-demo.git`
+1. `git clone https://github.com/amysw13/multinational-retail-data-centralisation.git`
 2. `cd multinational-retail-data-centralisation`
 3. Configure AWS RDS, API, PostgreSQL credentials
 4. `python Classes/main.py` or `python3 Classes/main.py` to extract, clean and upload data to centralised database

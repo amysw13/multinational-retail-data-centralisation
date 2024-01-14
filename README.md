@@ -8,7 +8,12 @@
   - [Aim](#aim)
   - [Learnt Objectives](#learnt-objectives)
 - [Installation and Usage Instructions ⚙](#installation-and-usage-instructions-)
-  - [Example Use / Demo](#example-use--demo)
+  - [Dependencies](#dependencies)
+  - [Installation Instructions](#installation-instructions)
+  - [Demo](#demo)
+    - [1. Database connection, data extraction and data cleaning](#1-database-connection-data-extraction-and-data-cleaning)
+    - [2. Database schema development](#2-database-schema-development)
+    - [3. Database querying](#3-database-querying)
     - [Result](#result)
 - [File Structure 📂](#file-structure-)
 - [License information 🗒](#license-information-)
@@ -16,7 +21,7 @@
   - [Database connecting](#database-connecting)
   - [Data extracting/downloading](#data-extractingdownloading)
   - [Data cleaning](#data-cleaning)
----
+
 ## Description
 
 This project is for collating retail sales data for a multinational company, where data is spread across multiple data sources to one centralised database. Facilitating accessibility and analysing for company team members to become more data-driven.
@@ -50,7 +55,46 @@ Querying the newly created centralised database to get up-to-date business metri
 
 # Installation and Usage Instructions ⚙
 
+## Dependencies
+
+Requires PostgreSQL
+
+Requires Python3
+
+Requires following packages:
+
+      pandas
+      tabula
+      requests
+      boto3
+      yaml
+      sqlalchemy
+      pandas as pd
+      numpy as np
+      re
+
+Installed by running:
+
+`pip install <package_name>`
+
+Alternatively, use [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml) to import project conda environment, by running:
+
+`conda create -f amy_mrdc_env.yaml -n <env_name>`
+
+## Installation Instructions
+
+1. `git clone https://github.com/vpagador/powerbi-demo.git`
+2. `cd multinational-retail-data-centralisation`
+3. Configure AWS RDS, API, PostgreSQL credentials
+4. `python Classes/main.py` or `python3 Classes/main.py` to extract, clean and upload data to centralised database
+
 ---
+
+## Demo
+
+<img height="40" width="40" src="https://cdn.simpleicons.org/python/"/>
+
+### 1. Database connection, data extraction and data cleaning
 
 **Import class modules:**
 
@@ -66,26 +110,11 @@ import Classes.data_cleaning as data_clean
 connector = db_utils.DatabaseConnector()
 extractor = data_ext.DataExtractor()
 cleaning = data_clean.DataCleaning()
-
 ```
-
-**Usage**
-
-Usage order to complete project from scratch. Additionally, can use [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml) to import project conda environment.
-
-1. Classes modules - database connection, data extraction and data cleaning.
-2. Database schema development
-3. Database querying
-
-## Example Use / Demo
-
----
-
-<img height="40" width="40" src="https://cdn.simpleicons.org/python/"/>
 
 Connecting to AWS RDS database:
 
-See [credentials\_template.yaml](Credentials/credentials_template.yaml) for an example to create own credentials file.
+*See [credentials\_template.yaml](Credentials/credentials_template.yaml) for an example to create own credentials file.*
 
 ```py
 # Reading in AWS RDS database credentials from .yaml file.
@@ -119,14 +148,16 @@ Uploading dataframe to centralised database:
 # Cleaned df object uploaded to centralised database, table named as 'dim_users'.
 connector.upload_to_db(clean_rds_df, 'dim_users')
 ```
-Detailed examples of class methods in [testing\_script.ipynb](testing_script.ipynb)
 
 ---
 
 <img height="40" width="40" src="https://cdn.simpleicons.org/postgresql/"/>
 
+### 2. Database schema development
+
 Centralised database star-based schema development [database\_schema.ipynb](database_schema.ipynb)
 
+### 3. Database querying
 Applied PostgreSQL database querying [querying\_database.ipynb](querying_database.ipynb)
 
 Example:
@@ -144,6 +175,7 @@ ORDER BY
     total_no_stores DESC;
 
 ```
+
 ### Result
 
 |country_code  |total_no_stores
@@ -154,30 +186,25 @@ ORDER BY
 
 # File Structure 📂
 
----
-- 📂 __multinational\-retail\-data\-centralisation__
-   - 📂 __Classes__
-     - 📄 [\_\_init\_\_.py](Classes/__init__.py)
-     - 📄 [data\_cleaning.py](Classes/data_cleaning.py)
-     - 📄 [data\_extraction.py](Classes/data_extraction.py)
-     - 📄 [database\_utils.py](Classes/database_utils.py)
-   - 📂 __Credentials__
-     - 📄 [credentials\_template.yaml](Credentials/credentials_template.yaml)
-     - 📄 [db\_creds.yaml](Credentials/db_creds.yaml)
-     - 📄 [local\_creds.yaml](Credentials/local_creds.yaml)
-   - 📂 __Data__
-     - 📄 [date\_details.json](Data/date_details.json)
-     - 📄 [products.csv](Data/products.csv)
-   - 📄 [LICENSE](LICENSE)
-   - 📄 [README.md](README.md)
-   - 📄 [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml)
-   - 📄 [database\_schema.ipynb](database_schema.ipynb)
-   - 📄 [querying\_database.ipynb](querying_database.ipynb)
-   - 📄 [testing\_script.ipynb](testing_script.ipynb)
-  
-# License information 🗒
+- 📂 __Classes__
+  - 📄 [\_\_init\_\_.py](Classes/__init__.py)
+  - 📄 [data\_cleaning.py](Classes/data_cleaning.py)
+  - 📄 [data\_extraction.py](Classes/data_extraction.py)
+  - 📄 [database\_utils.py](Classes/database_utils.py)
+  - 📄 [main.py](Classes/main.py)
+- 📂 __Credentials__
+  - 📄 [credentials\_template.yaml](Credentials/credentials_template.yaml)
+- 📂 __Data__
+  - 📄 [date\_details.json](Data/date_details.json)
+  - 📄 [products.csv](Data/products.csv)
+- 📄 [LICENSE](LICENSE)
+- 📄 [README.md](README.md)
+- 📄 [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml)
+- 📄 [database\_schema.ipynb](database_schema.ipynb)
+- 📄 [querying\_database.ipynb](querying_database.ipynb)
+- 📄 [testing\_script.ipynb](testing_script.ipynb)
 
----
+# License information 🗒
 
 [MIT](LICENSE)
 

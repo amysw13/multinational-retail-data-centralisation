@@ -26,6 +26,8 @@
 
 This project is for collating retail sales data for a multinational company, where data is spread across multiple data sources to one centralised database. Facilitating accessibility and analysing for company team members to become more data-driven.
 
+![Project_schematic](Multinational_data_transparent.png)
+
 ## Aim
 
 Using [![python](https://img.shields.io/badge/Python-3776AB.svg)](https://www.python.org/) class methods are utilised for **connecting** to data sources, data **extraction** and **cleaning** downloaded data.

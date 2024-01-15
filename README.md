@@ -64,7 +64,7 @@ Querying the newly created centralised database to get up-to-date business metri
 
 ## Dependencies
 
-Requires PostgreSQL
+Requires PostgreSQL with pgAdmin4
 
 Requires Python3
 
@@ -92,7 +92,7 @@ Alternatively, use [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml) to import project co
 
 1. `git clone https://github.com/amysw13/multinational-retail-data-centralisation.git`
 2. `cd multinational-retail-data-centralisation`
-3. Configure AWS RDS, API, PostgreSQL credentials
+3. Configure PostgreSQL centralised database and credentials to connect with AWS RDS, API and PostgreSQL
 4. `python Classes/main.py` or `python3 Classes/main.py` to extract, clean and upload data to centralised database
 
 ---

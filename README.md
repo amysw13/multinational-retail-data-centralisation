@@ -26,7 +26,7 @@
 
 This project is for collating retail sales data for a multinational company, where data is spread across multiple data sources to one centralised database. Facilitating accessibility and analysing for company team members to become more data-driven.
 
-![Project_schematic](.\images\Multinational_data_transparent.png)
+![Project_schematic](images\Multinational_data_transparent.png "Schematic of project design")
 
 ## Aim
 
@@ -52,7 +52,7 @@ Querying the newly created centralised database to get up-to-date business metri
 - Accessing data from multiple formats. E.g. *.json*, *.csv*, *.yaml* and, *.pdf* files.
 - Data cleaning with pandas and numpy.
 - Connecting and uploading to locally hosted PostgreSQL database.
-- Developing star-based scheme for PostgreSQL database.
+- Developing star-based schema for PostgreSQL database.
 - Querying centralised database with PostgreSQL.
 - Utilising CTEs in PostgreSQL queries.
 - Advanced project documentation and versioning with Github.
@@ -171,7 +171,8 @@ Complete run through of project in  [testing\_script.ipynb](testing_script.ipynb
 
 Centralised database star-based schema development [database\_schema.ipynb](database_schema.ipynb)
 
-![Sales_data_ERD](.\images\Sales_data_ERD.png)
+![Sales_data_ERD](images\Sales_data_ERD.png "Entity Relationship diagram of STAR-based schema centralised database")
+> Entity Relationship diagram of STAR-based schema centralised database
 
 ### 3. Database querying
 

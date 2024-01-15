@@ -6,7 +6,7 @@
 - [Table of contents](#table-of-contents)
   - [Description](#description)
   - [Aim](#aim)
-  - [Learnt Objectives](#learnt-objectives)
+    - [Achievement Outcomes 📖](#achievement-outcomes-)
 - [Installation and Usage Instructions ⚙](#installation-and-usage-instructions-)
   - [Dependencies](#dependencies)
   - [Installation Instructions](#installation-instructions)
@@ -36,7 +36,10 @@ Cleaned data will be uploaded to a centralised [![PostgreSQL](https://img.shield
 
 Querying the newly created centralised database to get up-to-date business metrics, using [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1.svg)](https://www.postgresql.org).
 
-## Learnt Objectives
+<details>
+<summary><h3>Achievement Outcomes📖</h3></summary>
+
+### Achievement Outcomes 📖
 
 - Advanced object orientated programming in Python.
 - Advanced development of Python class and methods.
@@ -54,6 +57,8 @@ Querying the newly created centralised database to get up-to-date business metri
 - Utilising CTEs in PostgreSQL queries.
 - Advanced project documentation and versioning with Github.
 - Applying Conda environments for project, and exportation to facilitate project collaboration.
+
+</details>
 
 # Installation and Usage Instructions ⚙
 

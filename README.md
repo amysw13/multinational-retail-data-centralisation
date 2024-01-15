@@ -26,7 +26,7 @@
 
 This project is for collating retail sales data for a multinational company, where data is spread across multiple data sources to one centralised database. Facilitating accessibility and analysing for company team members to become more data-driven.
 
-![Project_schematic](Multinational_data_transparent.png)
+![Project_schematic](images\Multinational_data_transparent.png)
 
 ## Aim
 
@@ -70,15 +70,17 @@ Requires Python3
 
 Requires following packages:
 
-      pandas
-      tabula
-      requests
-      boto3
-      yaml
-      sqlalchemy
-      pandas as pd
-      numpy as np
-      re
+```py
+pandas
+tabula
+requests
+boto3
+yaml
+sqlalchemy
+pandas as pd
+numpy as np
+re
+```
 
 Installed by running:
 
@@ -119,27 +121,30 @@ extractor = data_ext.DataExtractor()
 cleaning = data_clean.DataCleaning()
 ```
 
-Connecting to AWS RDS database:
+Reading credentials and create connection to AWS RDS and local centralised databases:
 
 *See [credentials\_template.yaml](Credentials/credentials_template.yaml) for an example to create own credentials file.*
 
 ```py
-# Reading in AWS RDS database credentials from .yaml file.
-creds = connector.read_db_creds()
-
+# Reading in AWS RDS database credentials file.
+AWS_RDS_credentials = connector.read_db_creds('db_creds')
 # Create engine and connecting to AWS RDS database.
-engine = connector.init_db_engine()
+AWS_RDS_engine = connector.init_db_engine(AWS_RDS_credentials)
 
-# Printing list of available tables names in AWS RDS database
-db_list = connector.list_db_tables()
-
+# Reading in centralised local database credentials file.
+local_credentials = connector.read_db_creds('local_creds')
+# Create engine and connecting to centralised local database.
+local_engine = connector.init_db_engine(local_credentials)
 ```
 
 Data extraction/downloading:
 
 ```py
+# Printing list of available tables names in AWS RDS database
+db_list = connector.list_db_tables(AWS_RDS_engine)
+
 # Download data from 'legacy_users' table, using the AWS RDS specified connection engine.
-rds_df = extractor.read_rds_table('legacy_users', engine)
+rds_df = extractor.read_rds_table('legacy_users', AWS_RDS_engine)
 ```
 
 Data Cleaning:
@@ -153,8 +158,10 @@ Uploading dataframe to centralised database:
 
 ```py
 # Cleaned df object uploaded to centralised database, table named as 'dim_users'.
-connector.upload_to_db(clean_rds_df, 'dim_users')
+connector.upload_to_db(clean_rds_df, 'dim_users', local_engine)
 ```
+
+Complete run through of project in  [testing\_script.ipynb](testing_script.ipynb)
 
 ---
 
@@ -164,9 +171,10 @@ connector.upload_to_db(clean_rds_df, 'dim_users')
 
 Centralised database star-based schema development [database\_schema.ipynb](database_schema.ipynb)
 
-![Sales_data_ERD](Sales_data_ERD.png)
+![Sales_data_ERD](images\Sales_data_ERD.png)
 
 ### 3. Database querying
+
 Applied PostgreSQL database querying [querying\_database.ipynb](querying_database.ipynb)
 
 Example:
@@ -206,6 +214,9 @@ ORDER BY
 - 📂 __Data__
   - 📄 [date\_details.json](Data/date_details.json)
   - 📄 [products.csv](Data/products.csv)
+- 📂 __images__
+  - 📄 [Multinational\_data\_transparent.png](images/Multinational_data_transparent.png)
+  - 📄 [Sales\_data\_ERD.png](images/Sales_data_ERD.png)
 - 📄 [LICENSE](LICENSE)
 - 📄 [README.md](README.md)
 - 📄 [amy\_mrdc\_env.yaml](amy_mrdc_env.yaml)

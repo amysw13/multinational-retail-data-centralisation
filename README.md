@@ -26,7 +26,7 @@
 
 This project is for collating retail sales data for a multinational company, where data is spread across multiple data sources to one centralised database. Facilitating accessibility and analysing for company team members to become more data-driven.
 
-![Project_schematic](images\Multinational_data_transparent.png)
+![Project_schematic](.\images\Multinational_data_transparent.png)
 
 ## Aim
 
@@ -171,7 +171,7 @@ Complete run through of project in  [testing\_script.ipynb](testing_script.ipynb
 
 Centralised database star-based schema development [database\_schema.ipynb](database_schema.ipynb)
 
-![Sales_data_ERD](images\Sales_data_ERD.png)
+![Sales_data_ERD](.\images\Sales_data_ERD.png)
 
 ### 3. Database querying
 
